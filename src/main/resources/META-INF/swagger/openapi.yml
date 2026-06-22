@@ -1,0 +1,203 @@
+openapi: 3.0.3
+info:
+  title: Police Force Dogs API
+  version: "0.1"
+  description: API for managing police force dogs (minimal generated spec)
+servers:
+  - url: http://localhost:8080
+paths:
+  /api/dogs:
+    get:
+      summary: List dogs
+      description: Returns a list of dogs (excludes dogs with a deleted = true by default)
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            format: int32
+        - name: filter
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of dogs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Dog'
+    post:
+      summary: Create a dog
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DogCommand'
+      responses:
+        '201':
+          description: Dog created
+          headers:
+            Location:
+              description: URI of the created resource
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dog'
+
+  /api/dogs/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+    get:
+      summary: Get a dog by id
+      responses:
+        '200':
+          description: Dog found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dog'
+        '404':
+          description: Not found
+    put:
+      summary: Update a dog
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DogCommand'
+      responses:
+        '200':
+          description: Dog updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dog'
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+    delete:
+      summary: Soft-delete a dog
+      responses:
+        '204':
+          description: Deleted (no content)
+        '404':
+          description: Not found
+
+components:
+  schemas:
+    Dog:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        breed:
+          type: string
+        supplier:
+          type: string
+        badgeId:
+          type: string
+        gender:
+          type: string
+        birthDate:
+          type: string
+          format: date
+        dateAcquired:
+          type: string
+          format: date
+        currentStatusId:
+          type: integer
+          format: int64
+        leavingDate:
+          type: string
+          format: date
+        leavingReasonId:
+          type: integer
+          format: int64
+        kennelId:
+          type: integer
+          format: int64
+        policeForceId:
+          type: integer
+          format: int64
+        characteristicIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+        deleted:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    DogCommand:
+      type: object
+      required:
+        - name
+        - breed
+        - supplier
+        - badgeId
+        - gender
+        - birthDate
+        - dateAcquired
+        - currentStatusId
+        - kennelId
+        - policeForceId
+      properties:
+        name:
+          type: string
+        breed:
+          type: string
+        supplier:
+          type: string
+        badgeId:
+          type: string
+        gender:
+          type: string
+          description: "male or female"
+        birthDate:
+          type: string
+          format: date
+        dateAcquired:
+          type: string
+          format: date
+        currentStatusId:
+          type: integer
+          format: int64
+        leavingDate:
+          type: string
+          format: date
+        leavingReasonId:
+          type: integer
+          format: int64
+        kennelId:
+          type: integer
+          format: int64
+        policeForceId:
+          type: integer
+          format: int64
+        characteristicIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+
